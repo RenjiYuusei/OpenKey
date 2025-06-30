@@ -457,10 +457,26 @@ static void handleMacro() {
 static bool SetModifierMask(const Uint16& vkCode) {
 	// For caps lock case, toggling the flag isn't enough. We need to check the actual state, which should be done before each key press.
 	// Example: the caps lock state can be changed without the key being pressed, or the key toggle is made with admin privilege, making the app not able to detect the change.
-	if (GetKeyState(VK_CAPITAL) == 1) _flag |= MASK_CAPITAL;
+	
+	// Thêm biến static để theo dõi trạng thái CapsLock trước đó
+	static bool lastCapsStatus = false;
+	
+	// Sửa cách kiểm tra trạng thái CapsLock
+	if (GetKeyState(VK_CAPITAL) & 0x0001) _flag |= MASK_CAPITAL;
 	else _flag &= ~MASK_CAPITAL;
+	
+	// Kiểm tra nếu trạng thái CapsLock thay đổi
+	bool currentCapsStatus = (_flag & MASK_CAPITAL) != 0;
+	if (lastCapsStatus != currentCapsStatus) {
+		startNewSession();
+		lastCapsStatus = currentCapsStatus;
+	}
 
-	if (vkCode == VK_LSHIFT || vkCode == VK_RSHIFT) _flag |= MASK_SHIFT;
+	if (vkCode == VK_CAPITAL) {
+		_isFlagKey = true;
+		return true;
+	}
+	else if (vkCode == VK_LSHIFT || vkCode == VK_RSHIFT) _flag |= MASK_SHIFT;
 	else if (vkCode == VK_LCONTROL || vkCode == VK_RCONTROL) _flag |= MASK_CONTROL;
 	else if (vkCode == VK_LMENU || vkCode == VK_RMENU) _flag |= MASK_ALT;
 	else if (vkCode == VK_LWIN || vkCode == VK_RWIN) _flag |= MASK_WIN;
