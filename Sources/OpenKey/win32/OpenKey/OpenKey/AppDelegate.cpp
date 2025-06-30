@@ -1,4 +1,4 @@
-﻿/*----------------------------------------------------------
+/*----------------------------------------------------------
 OpenKey - The Cross platform Open source Vietnamese Keyboard application.
 
 Copyright (C) 2019 Mai Vu Tuyen
@@ -109,6 +109,7 @@ int AppDelegate::run(HINSTANCE hInstance) {
 	OpenKeyManager::initEngine();
 
 	//create system tray
+	Sleep(1000);
 	SystemTrayHelper::createSystemTrayIcon(hInstance);
 	SystemTrayHelper::updateData();
 

@@ -18,6 +18,8 @@ redistribute your new version, it MUST be open source.
 #include "ConvertToolDialog.h"
 #include "MacroDialog.h"
 
+extern int vGameCompatibility;
+
 class BaseDialog;
 class AppDelegate {
 private:

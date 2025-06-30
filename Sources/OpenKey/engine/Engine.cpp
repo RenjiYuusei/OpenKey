@@ -605,7 +605,11 @@ void removeMark() {
         }
         hNCC = hBPC;
     } else {
+	if (gameCompatibility) {
+		hCode = vSendChar;
+	} else {
         hCode = vDoNothing;
+	}
     }
 }
 
@@ -1315,7 +1319,8 @@ void vKeyHandleEvent(const vKeyEvent& event,
                      const vKeyEventState& state,
                      const Uint16& data,
                      const Uint8& capsStatus,
-                     const bool& otherControlKey) {
+                     const bool& otherControlKey,
+					 const bool& gameCompatibility) {
     _isCaps = (capsStatus == 1 || //shift
                capsStatus == 2); //caps lock
     if ((IS_NUMBER_KEY(data) && capsStatus == 1)

@@ -197,6 +197,8 @@ BEGIN
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,151,31,122,10
     CONTROL         "Cho phép ""z w j f"" làm phụ âm đầu",IDC_CHECK_ALLOW_ZJWF,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,151,50,125,10
+    CONTROL         "Tương thích với game",IDC_CHECK_GAME_COMPATIBILITY,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,50,125,10
     CONTROL         "Tạm tắt chính tả bằng phím Ctrl",IDC_CHECK_TEMP_OFF_SPELLING,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,151,69,123,10
     CONTROL         "Loại trừ ứng dụng thông minh",IDC_CHECK_SMART_SWITCH_KEY,

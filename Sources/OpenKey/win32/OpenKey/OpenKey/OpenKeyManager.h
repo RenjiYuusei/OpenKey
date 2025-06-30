@@ -17,11 +17,15 @@ redistribute your new version, it MUST be open source.
 class OpenKeyManager {
 public:
 	static unsigned short _lastKeyCode;
+	static bool _isUpperCase;
+	static bool _isMacroWaiting;
 	static vector<LPCTSTR>& getInputType();
 	static vector<LPCTSTR>& getTableCode();
 
 	static void initEngine();
 	static void freeEngine();
+	static void resetInputState();
+	static void handleCaseChange(bool isUpper);
 
 	static bool checkUpdate(string& newVersion);
 

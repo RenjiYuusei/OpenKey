@@ -51,6 +51,7 @@ enum HoolCodeState {
     vRestore, //restore character to old char
     vReplaceMaro, //replace by macro
     vRestoreAndStartNewSession, //special flag: use for restore key if invalid word with break character (, . ")
+    vSendChar,
 };
 
 //bytes data for main program
