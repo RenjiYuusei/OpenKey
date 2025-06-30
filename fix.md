@@ -1,1 +1,2 @@
-- Sửa lỗi biểu tượng OpenKey không hiển thị trên thanh tác vụ khi khởi động cùng Windows. (#288)
+- Sửa lỗi biểu tượng OpenKey không hiển thị trên thanh tác vụ khi khởi động cùng Windows.
+- Sửa lỗi bản dựng do thiếu khai báo hàm và giá trị case trùng lặp.

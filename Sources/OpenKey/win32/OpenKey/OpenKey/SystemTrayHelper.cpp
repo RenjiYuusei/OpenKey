@@ -81,10 +81,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 		taskbarCreated = RegisterWindowMessage(_T("TaskbarCreated"));
 		// Fix for the icon disappearing from the taskbar on startup
 		// Post a delayed message to ensure the taskbar is ready
-		PostMessage(hWnd, WM_USER + 1, 0, 0);
+		PostMessage(hWnd, WM_USER + 2, 0, 0);
 		break;
 	}
-	case WM_USER + 1: {
+	case WM_USER + 2: {
 		// Add the icon to the system tray
 		loadTrayIcon();
 		Shell_NotifyIcon(NIM_ADD, &nid);
