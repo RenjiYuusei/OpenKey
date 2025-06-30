@@ -52,6 +52,8 @@ static HMENU otherCode;
 
 static NOTIFYICONDATA nid;
 
+static void loadTrayIcon();
+
 map<UINT, LPCTSTR> menuData = {
 	{POPUP_VIET_ON_OFF, _T("Bật Tiếng Việt")},
 	{POPUP_SPELLING, _T("Bật kiểm tra chính tả")},
