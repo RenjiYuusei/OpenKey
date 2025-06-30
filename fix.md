@@ -1,5 +1,1 @@
-# Các lỗi đã được sửa trong OpenKey
-
-## 1. Lỗi mất icon trên thanh taskbar Windows 11 (Issue #288
-
-## 2. Lỗi tự động viết hoa (Issue #259)
+- Sửa lỗi biểu tượng OpenKey không hiển thị trên thanh tác vụ khi khởi động cùng Windows. (#288)

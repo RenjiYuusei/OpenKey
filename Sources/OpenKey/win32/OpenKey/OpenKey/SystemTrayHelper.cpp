@@ -77,9 +77,20 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 	static UINT taskbarCreated;
 
 	switch (message) {
-	case WM_CREATE:
+	case WM_CREATE: {
 		taskbarCreated = RegisterWindowMessage(_T("TaskbarCreated"));
+		// Fix for the icon disappearing from the taskbar on startup
+		// Post a delayed message to ensure the taskbar is ready
+		PostMessage(hWnd, WM_USER + 1, 0, 0);
 		break;
+	}
+	case WM_USER + 1: {
+		// Add the icon to the system tray
+		loadTrayIcon();
+		Shell_NotifyIcon(NIM_ADD, &nid);
+		Shell_NotifyIcon(NIM_SETVERSION, &nid);
+		break;
+	}
 	case WM_USER+2019:
 		AppDelegate::getInstance()->onControlPanel();
 		break;
