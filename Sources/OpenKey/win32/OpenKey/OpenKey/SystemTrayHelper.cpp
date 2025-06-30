@@ -1,4 +1,4 @@
-﻿/*----------------------------------------------------------
+/*----------------------------------------------------------
 OpenKey - The Cross platform Open source Vietnamese Keyboard application.
 
 Copyright (C) 2019 Mai Vu Tuyen
@@ -52,8 +52,6 @@ static HMENU otherCode;
 
 static NOTIFYICONDATA nid;
 
-static void loadTrayIcon();
-
 map<UINT, LPCTSTR> menuData = {
 	{POPUP_VIET_ON_OFF, _T("Bật Tiếng Việt")},
 	{POPUP_SPELLING, _T("Bật kiểm tra chính tả")},
@@ -79,22 +77,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 	static UINT taskbarCreated;
 
 	switch (message) {
-	case WM_CREATE: {
+	case WM_CREATE:
 		taskbarCreated = RegisterWindowMessage(_T("TaskbarCreated"));
-		// Fix for the icon disappearing from the taskbar on startup
-		// Post a delayed message to ensure the taskbar is ready
-		PostMessage(hWnd, WM_USER + 2, 0, 0);
 		break;
-	}
-	case WM_USER + 2: {
-		// Add the icon to the system tray
-		loadTrayIcon();
-		Shell_NotifyIcon(NIM_ADD, &nid);
-		Shell_NotifyIcon(NIM_SETVERSION, &nid);
-		break;
-	}
 	case WM_USER+2019:
 		AppDelegate::getInstance()->onControlPanel();
+		break;
+	case WM_INPUTLANGCHANGE:
+		SystemTrayHelper::updateData();
 		break;
 	case WM_TRAYMESSAGE: {
 		if (lParam == WM_LBUTTONDBLCLK) {
@@ -179,9 +169,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 	default:
 		// if the taskbar is restarted, add the system tray icon again
 		if (message == taskbarCreated) {
-			loadTrayIcon();
 			Shell_NotifyIcon(NIM_ADD, &nid);
-			Shell_NotifyIcon(NIM_SETVERSION, &nid);
 		}
 		return DefWindowProc(hWnd, message, wParam, lParam);
 	}
@@ -269,12 +257,7 @@ static void loadTrayIcon() {
 
 void SystemTrayHelper::updateData() {
 	loadTrayIcon();
-	// Đảm bảo biểu tượng được cập nhật đúng cách
-	if (!Shell_NotifyIcon(NIM_MODIFY, &nid)) {
-		// Nếu cập nhật thất bại, thử thêm lại biểu tượng
-		Shell_NotifyIcon(NIM_ADD, &nid);
-		Shell_NotifyIcon(NIM_SETVERSION, &nid);
-	}
+	Shell_NotifyIcon(NIM_MODIFY, &nid);
 
 	MODIFY_MENU(popupMenu, POPUP_VIET_ON_OFF, vLanguage);
 	MODIFY_MENU(popupMenu, POPUP_SPELLING, vCheckSpelling);
@@ -337,7 +320,7 @@ static HINSTANCE ins;
 static int recreateCount = 0;
 
 void SystemTrayHelper::_createSystemTrayIcon(const HINSTANCE& hIns) {
-	HWND hWnd = createFakeWindow(hIns);
+	HWND hWnd = createFakeWindow(ins);
 	
 	if (hWnd == NULL) { //Use timer to create
 		if (recreateCount >= 5) {
@@ -352,21 +335,19 @@ void SystemTrayHelper::_createSystemTrayIcon(const HINSTANCE& hIns) {
 	createPopupMenu();
 
 	//create system tray
-	ZeroMemory(&nid, sizeof(NOTIFYICONDATA));
 	nid.cbSize = sizeof(NOTIFYICONDATA);
 	nid.hWnd = hWnd;
 	nid.uID = TRAY_ICONUID;
 	nid.uVersion = NOTIFYICON_VERSION;
 	nid.uCallbackMessage = WM_TRAYMESSAGE;
 	loadTrayIcon();
-	LoadString(hIns, IDS_APP_TITLE, nid.szTip, 128);
+	LoadString(ins, IDS_APP_TITLE, nid.szTip, 128);
 	nid.uFlags = NIF_MESSAGE | NIF_ICON | NIF_TIP;
 
 	// Shell_NotifyIcon may fail if the system tray icon is not fully initialized
-	const int maxRetries = 10;
+	const int maxRetries = 5;
 	for (int attempt = 0; attempt < maxRetries; ++attempt) {
 		if (Shell_NotifyIcon(NIM_ADD, &nid)) {
-			Shell_NotifyIcon(NIM_SETVERSION, &nid);
 			break;
 		}
 		Sleep(1000);
@@ -384,11 +365,5 @@ void SystemTrayHelper::createSystemTrayIcon(const HINSTANCE& hIns) {
 }
 
 void SystemTrayHelper::removeSystemTray() {
-	// Đảm bảo biểu tượng được xóa đúng cách
-	for (int i = 0; i < 3; i++) {
-		if (Shell_NotifyIcon(NIM_DELETE, &nid)) {
-			break;
-		}
-		Sleep(100);
-	}
+	Shell_NotifyIcon(NIM_DELETE, &nid);
 }

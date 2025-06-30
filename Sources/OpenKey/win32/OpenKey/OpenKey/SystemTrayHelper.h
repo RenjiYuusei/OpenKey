@@ -19,7 +19,6 @@ private:
 	static void CALLBACK WaitToCreateFakeWindow(HWND hwnd, UINT uMsg, UINT timerId, DWORD dwTime);
 	static HWND createFakeWindow(const HINSTANCE& hIns);
 	static void createPopupMenu();
-	static void loadTrayIcon();
 
 	static void _createSystemTrayIcon(const HINSTANCE& hIns);
 public:

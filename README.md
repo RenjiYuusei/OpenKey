@@ -1,9 +1,9 @@
-## OpenKey
+## OpenKey - Fix
 
-- Hiện tại mình chỉ fix các lỗi từ Openkey gốc thôi.
-- Mình sẽ update sau này.
+- Các lỗi đã được mình fix
+  [Lỗi được fix](fix.md)
 
 ## Tác giả
 
 - Mai Vũ Tuyên.
-- [Openkey gốc](https://github.com/tuyenvm/OpenKey)
+- [OpenKey](https://github.com/tuyenvm/OpenKey)
