@@ -109,7 +109,6 @@ int AppDelegate::run(HINSTANCE hInstance) {
 	OpenKeyManager::initEngine();
 
 	//create system tray
-	Sleep(1000);
 	SystemTrayHelper::createSystemTrayIcon(hInstance);
 	SystemTrayHelper::updateData();
 

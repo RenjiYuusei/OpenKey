@@ -242,12 +242,6 @@ INT_PTR MainControlDialog::eventProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM
         case IDC_BUTTON_GO_SOURCE_CODE:
             ShellExecute(NULL, _T("open"), _T("https://github.com/tuyenvm/OpenKey"), NULL, NULL, SW_SHOWNORMAL);
             break;
-        case IDC_CHECK_GAME_COMPATIBILITY:
-            if (HIWORD(wParam) == BN_CLICKED) {
-                vGameCompatibility = (int)SendMessage(GetDlgItem(hTabPage1, IDC_CHECK_GAME_COMPATIBILITY), BM_GETCHECK, 0, 0);
-                OpenKeyHelper::setRegInt(_T("gameCompatibility"), vGameCompatibility);
-            }
-            break;
         default:
             if (HIWORD(wParam) == CBN_SELCHANGE) {
                 this->onComboBoxSelected((HWND)lParam, LOWORD(wParam));
@@ -330,7 +324,6 @@ INT_PTR MainControlDialog::tabPageEventProc(HWND hDlg, UINT uMsg, WPARAM wParam,
 }
 
 void MainControlDialog::fillData() {
-    SendMessage(GetDlgItem(hTabPage1, IDC_CHECK_GAME_COMPATIBILITY), BM_SETCHECK, vGameCompatibility ? 1 : 0, 0);
     SendMessage(comboBoxInputType, CB_SETCURSEL, vInputType, 0);
     SendMessage(comboBoxTableCode, CB_SETCURSEL, vCodeTable, 0);
 

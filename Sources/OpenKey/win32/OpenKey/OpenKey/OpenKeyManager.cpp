@@ -33,9 +33,7 @@ static vector<LPCTSTR> _tableCode = {
 extern void OpenKeyInit();
 extern void OpenKeyFree();
 
-unsigned short OpenKeyManager::_lastKeyCode = 0;
-bool OpenKeyManager::_isUpperCase = false;
-bool OpenKeyManager::_isMacroWaiting = false;
+unsigned short  OpenKeyManager::_lastKeyCode = 0;
 
 vector<LPCTSTR>& OpenKeyManager::getInputType() {
 	return _inputType;
@@ -53,16 +51,8 @@ void OpenKeyManager::freeEngine() {
 	OpenKeyFree();
 }
 
-void OpenKeyManager::resetInputState() {
-    _isMacroWaiting = false;
-}
-
-void OpenKeyManager::handleCaseChange(bool isUpper) {
-    _isUpperCase = isUpper;
-}
-
 bool OpenKeyManager::checkUpdate(string& newVersion) {
-	wstring dataW = OpenKeyHelper::getContentOfUrl(L"https://raw.githubusercontent.com/RenjiYuusei/OpenKey/master/version.json");
+	wstring dataW = OpenKeyHelper::getContentOfUrl(L"https://raw.githubusercontent.com/tuyenvm/OpenKey/master/version.json");
 	string data = wideStringToUtf8(dataW);
 
 	//simple parse

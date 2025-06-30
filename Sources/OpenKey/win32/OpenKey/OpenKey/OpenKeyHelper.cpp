@@ -94,10 +94,11 @@ BYTE * OpenKeyHelper::getRegBinary(LPCTSTR key, DWORD& outSize) {
 void OpenKeyHelper::registerRunOnStartup(const int& val) {
 	if (val) {
 		if (vRunAsAdmin) {
-				string path = wideStringToUtf8(getFullPath());
-				string command = "schtasks /create /sc onlogon /tn OpenKey /rl highest /tr \"" + path + "\" /f";
-				WinExec(command.c_str(), SW_HIDE);
-			} else {
+			string path = wideStringToUtf8(getFullPath());
+			char buff[MAX_PATH];
+			sprintf_s(buff, "schtasks /create /sc onlogon /tn OpenKey /rl highest /tr \"%s\" /f", path.c_str());
+			WinExec(buff, SW_HIDE);
+		} else {
 			RegOpenKeyEx(HKEY_CURRENT_USER, _runOnStartupKeyPath, NULL, KEY_ALL_ACCESS, &hKey);
 			wstring path = getFullPath();
 			RegSetValueEx(hKey, _T("OpenKey"), 0, REG_SZ, (byte*)path.c_str(), ((DWORD)path.size() + 1) * sizeof(TCHAR));
@@ -137,7 +138,6 @@ string& OpenKeyHelper::getFrontMostAppExecuteName() {
 	_exeName = _tcsrchr(_exePath, '\\') + 1;
 	if (wcscmp(_exeName, _T("OpenKey64.exe")) == 0 ||
 		wcscmp(_exeName, _T("OpenKey32.exe")) == 0 || 
-		wcscmp(_exeName, _T("ApplicationFrameHost.exe")) == 0 ||
 		wcscmp(_exeName, _T("explorer.exe")) == 0) {
 		return _exeNameUtf8;
 	}

@@ -110,7 +110,6 @@ void OpenKeyInit() {
 	APP_GET_DATA(vOtherLanguage, 1);
 	APP_GET_DATA(vTempOffOpenKey, 0);
 	APP_GET_DATA(vFixChromiumBrowser, 0);
-	APP_GET_DATA(vGameCompatibility, 0);
 
 	//init convert tool
 	APP_GET_DATA(convertToolDontAlertWhenCompleted, 0);
@@ -456,12 +455,10 @@ static void handleMacro() {
 }
 
 static bool SetModifierMask(const Uint16& vkCode) {
-	if (vkCode == VK_CAPITAL) {
-		_flag ^= MASK_CAPITAL;
-	} else {
-		if (GetKeyState(VK_CAPITAL) == 1) _flag |= MASK_CAPITAL;
-		else _flag &= ~MASK_CAPITAL;
-	}
+	// For caps lock case, toggling the flag isn't enough. We need to check the actual state, which should be done before each key press.
+	// Example: the caps lock state can be changed without the key being pressed, or the key toggle is made with admin privilege, making the app not able to detect the change.
+	if (GetKeyState(VK_CAPITAL) == 1) _flag |= MASK_CAPITAL;
+	else _flag &= ~MASK_CAPITAL;
 
 	if (vkCode == VK_LSHIFT || vkCode == VK_RSHIFT) _flag |= MASK_SHIFT;
 	else if (vkCode == VK_LCONTROL || vkCode == VK_RCONTROL) _flag |= MASK_CONTROL;
@@ -587,8 +584,7 @@ LRESULT CALLBACK keyboardHookProcess(int nCode, WPARAM wParam, LPARAM lParam) {
 						vKeyEventState::KeyDown,
 						_keycode,
 						(_flag & MASK_SHIFT && _flag & MASK_CAPITAL) ? 0 : (_flag & MASK_SHIFT ? 1 : (_flag & MASK_CAPITAL ? 2 : 0)),
-						OTHER_CONTROL_KEY,
-						vGameCompatibility);
+						OTHER_CONTROL_KEY);
 		if (pData->code == vDoNothing) { //do nothing
 			if (IS_DOUBLE_CODE(vCodeTable)) { //VNI
 				if (pData->extCode == 1) { //break key
@@ -645,13 +641,6 @@ LRESULT CALLBACK keyboardHookProcess(int nCode, WPARAM wParam, LPARAM lParam) {
 			}
 		} else if (pData->code == vReplaceMaro) { //MACRO
 			handleMacro();
-		} else if (pData->code == vSendChar) { // Send char for games
-			HWND hWnd = GetForegroundWindow();
-			if (hWnd != NULL) {
-				for (int i = 0; i < pData->newCharCount; ++i) {
-					SendMessage(hWnd, WM_CHAR, pData->charData[i], 0);
-				}
-			}
 		}
 		return -1; //consume event
 	}
